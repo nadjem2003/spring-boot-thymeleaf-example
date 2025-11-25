@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SpringBootThymeleafExampleApplication {
 
-	// first comment test
+	// first comment
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBootThymeleafExampleApplication.class, args);
 	}
