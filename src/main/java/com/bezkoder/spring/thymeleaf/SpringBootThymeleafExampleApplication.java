@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SpringBootThymeleafExampleApplication {
 
 	// first comment
+	// REAL first comment
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBootThymeleafExampleApplication.class, args);
 	}
