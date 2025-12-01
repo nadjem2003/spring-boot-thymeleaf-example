@@ -2,6 +2,16 @@ package com.bezkoder.spring.thymeleaf.entity;
 
 import javax.persistence.*;
 
+/*@
+  @ invariant title != null && !title.isEmpty();
+  @ invariant level >= 0 && level <= 10;
+  @*/
+
+/**
+ * A tutorial entity with basic constraints:
+ * - title is non-null and non-empty
+ * - level is between 0 and 10
+ */
 @Entity
 @Table(name = "tutorials")
 public class Tutorial {
@@ -26,6 +36,14 @@ public class Tutorial {
 
   }
 
+  /*@
+    @ requires title != null && !title.isEmpty();
+    @ requires level >= 0 && level <= 10;
+    @ ensures this.title.equals(title);
+    @ ensures this.description == description;
+    @ ensures this.level == level;
+    @ ensures this.published == published;
+    @*/
   public Tutorial(String title, String description, int level, boolean published) {
     this.title = title;
     this.description = description;
@@ -41,34 +59,60 @@ public class Tutorial {
     this.id = id;
   }
 
+  /*@
+    @ ensures \result == title;
+    @*/
   public String getTitle() {
     return title;
   }
 
+  /*@
+    @ requires title != null && !title.isEmpty();
+    @ ensures this.title.equals(title);
+    @*/
   public void setTitle(String title) {
     this.title = title;
   }
 
+  /*@
+    @ ensures \result == description;
+    @*/
   public String getDescription() {
     return description;
   }
 
+  /*@
+    @ ensures this.description == description;
+    @*/
   public void setDescription(String description) {
     this.description = description;
   }
 
+  /*@
+    @ ensures \result == level;
+    @*/
   public int getLevel() {
     return level;
   }
 
+  /*@
+    @ requires level >= 0 && level <= 10;
+    @ ensures this.level == level;
+    @*/
   public void setLevel(int level) {
     this.level = level;
   }
 
+  /*@
+    @ ensures \result == published;
+    @*/
   public boolean isPublished() {
     return published;
   }
 
+  /*@
+    @ ensures this.published == published;
+    @*/
   public void setPublished(boolean published) {
     this.published = published;
   }
@@ -76,7 +120,7 @@ public class Tutorial {
   @Override
   public String toString() {
     return "Tutorial [id=" + id + ", title=" + title + ", description=" + description + ", level=" + level
-        + ", published=" + published + "]";
+            + ", published=" + published + "]";
   }
 
 }
