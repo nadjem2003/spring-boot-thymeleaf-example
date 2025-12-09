@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 import com.bezkoder.spring.thymeleaf.entity.Tutorial;
 import com.bezkoder.spring.thymeleaf.repository.TutorialRepository;
@@ -24,7 +26,7 @@ public class TutorialController {
   @GetMapping("/tutorials")
   public String getAll(Model model, @Param("keyword") String keyword) {
     try {
-      List<Tutorial> tutorials = new ArrayList<Tutorial>();
+      List<Tutorial> tutorials = new ArrayList<>();
 
       if (keyword == null) {
         tutorialRepository.findAll().forEach(tutorials::add);
@@ -36,6 +38,7 @@ public class TutorialController {
       model.addAttribute("tutorials", tutorials);
     } catch (Exception e) {
       model.addAttribute("message", e.getMessage());
+      model.addAttribute("tutorials", new ArrayList<>());  // ← REQUIRED FIX
     }
 
     return "tutorials";
@@ -93,16 +96,15 @@ public class TutorialController {
 
     return "redirect:/tutorials";
   }
-
   @GetMapping("/tutorials/{id}/published/{status}")
-  public String updateTutorialPublishedStatus(@PathVariable("id") Integer id, @PathVariable("status") boolean published,
-      Model model, RedirectAttributes redirectAttributes) {
+  public String updateTutorialPublishedStatus(
+          @PathVariable("id") Integer id,
+          @PathVariable("status") boolean status,
+          RedirectAttributes redirectAttributes) {
     try {
-      tutorialRepository.updatePublishedStatus(id, published);
+      tutorialRepository.updatePublishedStatus(id, status);
 
-      String status = published ? "published" : "disabled";
-      String message = "The Tutorial id=" + id + " has been " + status;
-
+      String message = "The Tutorial id=" + id + " has been " + (status ? "published" : "disabled");
       redirectAttributes.addFlashAttribute("message", message);
     } catch (Exception e) {
       redirectAttributes.addFlashAttribute("message", e.getMessage());
@@ -110,4 +112,6 @@ public class TutorialController {
 
     return "redirect:/tutorials";
   }
+
+
 }
