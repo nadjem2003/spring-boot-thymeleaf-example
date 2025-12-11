@@ -1,0 +1,52 @@
+[
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "com.bezkoder.spring.thymeleaf.benchmark.SimpleBenchmark.testMethod",
+        "mode" : "thrpt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "C:\\Program Files\\Java\\jdk-25\\bin\\java.exe",
+        "jvmArgs" : [
+        ],
+        "jdkVersion" : "25.0.1",
+        "vmName" : "Java HotSpot(TM) 64-Bit Server VM",
+        "vmVersion" : "25.0.1+8-LTS-27",
+        "warmupIterations" : 1,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 2,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 1860664.102877734,
+            "scoreError" : "NaN",
+            "scoreConfidence" : [
+                "NaN",
+                "NaN"
+            ],
+            "scorePercentiles" : {
+                "0.0" : 1809893.9381420047,
+                "50.0" : 1860664.102877734,
+                "90.0" : 1911434.2676134633,
+                "95.0" : 1911434.2676134633,
+                "99.0" : 1911434.2676134633,
+                "99.9" : 1911434.2676134633,
+                "99.99" : 1911434.2676134633,
+                "99.999" : 1911434.2676134633,
+                "99.9999" : 1911434.2676134633,
+                "100.0" : 1911434.2676134633
+            },
+            "scoreUnit" : "ops/s",
+            "rawData" : [
+                [
+                    1809893.9381420047,
+                    1911434.2676134633
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    }
+]
+
+
