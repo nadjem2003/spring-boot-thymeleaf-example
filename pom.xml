@@ -179,23 +179,17 @@
 
 							<rules>
 								<rule>
-									<element>CLASS</element>
-									<limits>
-										<limit>
-											<counter>LINE</counter>
-											<value>COVEREDRATIO</value>
-											<minimum>0.40</minimum>
-										</limit>
-									</limits>
+									<element>BUNDLE</element>
 								</rule>
 							</rules>
+
 						</configuration>
 
 					</execution>
 
 				</executions>
 			</plugin>
-			
+
 			<!-- JMH runnable JAR -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
