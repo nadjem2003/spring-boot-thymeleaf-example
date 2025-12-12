@@ -189,27 +189,41 @@
 				</executions>
 			</plugin>
 
-			<!-- JMH runnable JAR -->
+			<!-- Run JMH benchmarks -->
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.5.1</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration combine.self="override">
-							<createDependencyReducedPom>false</createDependencyReducedPom>
-							<transformers>
-								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>org.openjdk.jmh.Main</mainClass>
-								</transformer>
-							</transformers>
-						</configuration>
-					</execution>
-				</executions>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+					<classpathScope>test</classpathScope>
+					<mainClass>com.bezkoder.spring.thymeleaf.benchmark.SimpleBenchmarkRunner</mainClass>
+					<arguments>
+						<argument>-f</argument>
+						<argument>1</argument>
+						<argument>-wi</argument>
+						<argument>1</argument>
+						<argument>-i</argument>
+						<argument>3</argument>
+					</arguments>
+					<!-- Include JMH and test dependencies -->
+					<includePluginDependencies>true</includePluginDependencies>
+					<additionalClasspathElements>
+						<additionalClasspathElement>${project.build.testOutputDirectory}</additionalClasspathElement>
+						<additionalClasspathElement>${project.build.outputDirectory}</additionalClasspathElement>
+					</additionalClasspathElements>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.openjdk.jmh</groupId>
+						<artifactId>jmh-core</artifactId>
+						<version>1.37</version>
+					</dependency>
+					<dependency>
+						<groupId>org.openjdk.jmh</groupId>
+						<artifactId>jmh-generator-annprocess</artifactId>
+						<version>1.37</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 
 			<plugin>
@@ -219,9 +233,16 @@
 				<configuration>
 					<source>11</source>
 					<target>11</target>
+					<!-- Enable JMH annotation processor -->
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.openjdk.jmh</groupId>
+							<artifactId>jmh-generator-annprocess</artifactId>
+							<version>1.37</version>
+						</path>
+					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
-
 
 
 		</plugins>
