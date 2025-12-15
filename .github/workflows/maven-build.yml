@@ -40,13 +40,21 @@ jobs:
           GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
 
       # ---------------------------------------------------
-      # 5. Snyk security scan
-      - name: Snyk Test
-        uses: snyk/actions/maven@master
+      # Switch to Java 17 for Snyk compatibility
+      - name: Set up JDK 17 for Snyk
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      # Snyk – Dependency vulnerability scan
+      - name: Snyk test
+        uses: snyk/actions/maven@v3
         with:
           command: test
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
 
       # ---------------------------------------------------
       # 6. Clear Maven Shade plugin cache
