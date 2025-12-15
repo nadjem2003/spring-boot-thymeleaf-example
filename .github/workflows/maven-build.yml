@@ -34,11 +34,11 @@ jobs:
 
       # ---------------------------------------------------
       # 4. GitGuardian secret scanning
-      # ---------------------------------------------------
       - name: GitGuardian secret scan
         uses: GitGuardian/ggshield-action@v1
-        with:
-          api_key: ${{ secrets.GITGUARDIAN_API_KEY }}
+        env:
+        GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
+
 
       # ---------------------------------------------------
       # 5. Snyk security scan (vulnerabilities & licenses)
