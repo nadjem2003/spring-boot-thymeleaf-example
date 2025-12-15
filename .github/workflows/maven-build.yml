@@ -49,11 +49,13 @@ jobs:
 
       # Snyk – Dependency vulnerability scan
       - name: Snyk test
-        uses: snyk/actions/maven@v3
+        uses: snyk/actions/maven@master
         with:
           command: test
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+
 
 
       # ---------------------------------------------------
