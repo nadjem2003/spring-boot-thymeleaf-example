@@ -244,19 +244,31 @@
 				</configuration>
 			</plugin>
 
-			<!--OWASP Dependency -->
+			<!-- OWASP Dependency-Check for Security Vulnerability Scanning -->
 			<plugin>
-    <groupId>org.owasp</groupId>
-    <artifactId>dependency-check-maven</artifactId>
-    <version>9.0.9</version>
-    <executions>
-        <execution>
-            <goals>
-                <goal>check</goal>
-            </goals>
-        </execution>
-    </executions>
-</plugin>
+				<groupId>org.owasp</groupId>
+				<artifactId>dependency-check-maven</artifactId>
+				<version>9.0.9</version>
+				<configuration>
+					<!-- Enable autoupdate to create vulnerability database -->
+					<autoUpdate>true</autoUpdate>
+					<!-- Skip test dependencies -->
+					<skipTestScope>true</skipTestScope>
+					<!-- Generate HTML report -->
+					<format>HTML</format>
+					<!-- Output directory -->
+					<outputDirectory>${project.build.directory}/dependency-check</outputDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<phase>verify</phase>
+					</execution>
+				</executions>
+			</plugin>
+
 
 		</plugins>
 	</build>
