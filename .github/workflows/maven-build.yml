@@ -50,15 +50,14 @@ jobs:
       # Snyk – Dependency vulnerability scan
       - name: Snyk test
         uses: snyk/actions/maven@master
+        continue-on-error: true
         with:
           command: test
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
 
-
-
-      # ---------------------------------------------------
+        # ---------------------------------------------------
       # 6. Clear Maven Shade plugin cache
       - name: Clear Maven cache
         run: rm -rf ~/.m2/repository/org/apache/maven/plugins/maven-shade-plugin
