@@ -1,44 +1,85 @@
 name: Maven Build
 
+# ---------------------------------------------------------
+# Triggers: Run CI on push & PR to main/master
+# ---------------------------------------------------------
 on:
   push:
-    branches:
-      - main
-      - master
+    branches: [ main, master ]
   pull_request:
-    branches:
-      - main
-      - master
+    branches: [ main, master ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repository
+      # 1. Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Set up Java (change version if needed)
-      - name: Set up JDK
+      # ---------------------------------------------------
+      # 2. Set up Java 25 for Maven build
+      - name: Set up JDK 25
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '25'
           cache: maven
 
-      # 3. Build with Maven
+      # ---------------------------------------------------
+      # 3. Build with Maven using Java 25
+      # ---------------------------------------------------
       - name: Build with Maven
         run: mvn -B clean verify
 
-      #4.
+      # ---------------------------------------------------
+      # 4. GitGuardian secret scanning
+      # ---------------------------------------------------
+      - name: GitGuardian secret scan
+        uses: GitGuardian/ggshield-action@v1
+        with:
+          api_key: ${{ secrets.GITGUARDIAN_API_KEY }}
+
+      # ---------------------------------------------------
+      # 5. Snyk security scan (vulnerabilities & licenses)
+      # ---------------------------------------------------
+      - name: Snyk Test
+        uses: snyk/actions/maven@master
+        with:
+          command: test
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      # ---------------------------------------------------
+      # 6. Clear Maven Shade plugin cache
+      # ---------------------------------------------------
       - name: Clear Maven cache
         run: rm -rf ~/.m2/repository/org/apache/maven/plugins/maven-shade-plugin
-      #5
+
+      # ---------------------------------------------------
+      # 7. Switch to Java 11 for OWASP + SonarCloud
+      #    (Java 25 breaks both)
+      # ---------------------------------------------------
       - name: Set up JDK 11
         uses: actions/setup-java@v4
         with:
+          distribution: temurin
           java-version: '11'
-          distribution: 'temurin'
 
+      # ---------------------------------------------------
+      # 8. OWASP Dependency Check (CVE scanning)
+      # ---------------------------------------------------
+      - name: OWASP Dependency Check
+        run: mvn org.owasp:dependency-check-maven:check
+
+      # ---------------------------------------------------
+      # 9. SonarCloud static analysis
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2
+        with:
+          projectBaseDir: .
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+          SONAR_ORG: ${{ secrets.SONAR_ORG }}
