@@ -39,10 +39,8 @@ jobs:
         env:
         GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
 
-
       # ---------------------------------------------------
-      # 5. Snyk security scan (vulnerabilities & licenses)
-      # ---------------------------------------------------
+      # 5. Snyk security scan
       - name: Snyk Test
         uses: snyk/actions/maven@master
         with:
@@ -52,7 +50,6 @@ jobs:
 
       # ---------------------------------------------------
       # 6. Clear Maven Shade plugin cache
-      # ---------------------------------------------------
       - name: Clear Maven cache
         run: rm -rf ~/.m2/repository/org/apache/maven/plugins/maven-shade-plugin
 
@@ -74,7 +71,6 @@ jobs:
           -DautoUpdate=false \
           -Danalyzer.nvd.enabled=false \
           -DfailBuildOnCVSS=11
-
 
 
       # ---------------------------------------------------
