@@ -73,16 +73,17 @@ jobs:
           java-version: '11'
 
       # ---------------------------------------------------
-      # 8. OWASP Dependency Check (CVE scanning)(with NVD API Key)
-      - name: OWASP Dependency Check (CI safe)
-        run: mvn org.owasp:dependency-check-maven:check \
-          -Ddependency-check.skip=false \
-          -DautoUpdate=false \
-          -Danalyzer.nvd.enabled=false \
-          -DfailBuildOnCVSS=11
+      # 8. OWASP Dependency Check (CVE scanning with NVD API key)
+      - name: OWASP Dependency Check
+        run: |
+          mvn org.owasp:dependency-check-maven:check \
+            -Ddependency-check.skip=false \
+            -Dnvd.api.key=${{ secrets.NVD_API_KEY }} \
+            -DfailBuildOnCVSS=7
+      
+      
 
-
-      # ---------------------------------------------------
+        # ---------------------------------------------------
       # 9. SonarCloud static analysis
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
