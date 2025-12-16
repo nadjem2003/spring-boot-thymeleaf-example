@@ -11,21 +11,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout code
+      # ---------------------------------------------------
+      # 1. Checkout source code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Set up Java 25 for Maven build
-      - name: Set up JDK 25
+      # ---------------------------------------------------
+      # 2. Set up Java 17 (stable baseline for build)
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '25'
+          java-version: '17'
           cache: maven
 
       # ---------------------------------------------------
-      # 3. Build with Maven using Java 25
-      - name: Build with Maven (skip OWASP here)
+      # 3. Maven build & tests (skip OWASP here)
+      - name: Build with Maven
         run: mvn -B clean verify -Ddependency-check.skip=true
 
       # ---------------------------------------------------
@@ -36,14 +38,7 @@ jobs:
           GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
 
       # ---------------------------------------------------
-      # Switch to Java 17 for Snyk compatibility
-      - name: Set up JDK 17 for Snyk
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      # Snyk – Dependency vulnerability scan
+      # 5. Snyk dependency vulnerability scan
       - name: Snyk test
         uses: snyk/actions/maven@master
         continue-on-error: true
@@ -52,38 +47,19 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-
-        # ---------------------------------------------------
-      # 6. Clear Maven Shade plugin cache
-      - name: Clear Maven cache
-        run: rm -rf ~/.m2/repository/org/apache/maven/plugins/maven-shade-plugin
-
       # ---------------------------------------------------
-      # 7. Switch to Java 11 for OWASP + SonarCloud
-      - name: Set up JDK 11
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '11'
-
-      # ---------------------------------------------------
-      # OWASP Dependency Check (local analysis only - no external APIs)
+      # 6. OWASP Dependency-Check (offline / CI-safe)
       - name: OWASP Dependency Check
         run: |
-          echo "Running OWASP security scan (local analysis only)..."
-          mvn dependency-check:check -DautoUpdate=false -q || echo "Security scan completed"
-      
-      
+          echo "Running OWASP Dependency Check (offline mode)"
+          mvn dependency-check:check \
+            -DautoUpdate=false \
+            -DfailOnError=false \
+            -Dformat=HTML || true
 
-        # 9. SonarCloud requires Java 17
-      - name: Set up JDK 17 for Sonar
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-
+      # ---------------------------------------------------
+      # 7. SonarCloud static code analysis
       - name: SonarCloud Scan
         run: mvn -B sonar:sonar
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
