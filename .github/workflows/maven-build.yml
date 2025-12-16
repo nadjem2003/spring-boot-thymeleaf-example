@@ -11,10 +11,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ---------------------------------------------------
-      # 1. Checkout source code
+      # 1. Checkout source code (FIXED: fetch-depth 0)
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Crucial for SonarCloud to see branches and history
 
       # ---------------------------------------------------
       # 2. Set up Java 17 (stable baseline for build)
@@ -57,9 +58,9 @@ jobs:
             -DfailOnError=false \
             -Dformat=HTML || true
 
-      # ---------------------------------------------------
-      # 7. SonarCloud static code analysis
+      # 7. SonarCloud static code analysis (FIXED: added GITHUB_TOKEN)
       - name: SonarCloud Scan
-        run: mvn -B sonar:sonar
+        run: mvn -B sonar:sonar -Dsonar.projectKey=nadjem_spring-boot-thymeleaf-example -Dsonar.organization=nadjem -Dsonar.host.url=https://sonarcloud.io
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Required by SonarCloud to get PR data
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
