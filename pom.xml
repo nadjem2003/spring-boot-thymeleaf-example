@@ -21,7 +21,14 @@
 
 	<properties>
 		<java.version>11</java.version>
+
+		<!-- SonarCloud configuration -->
+		<sonar.projectKey>tassili_spring-boot-thymeleaf-example</sonar.projectKey>
+		<sonar.organization>tassili</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
+
+
 
 	<dependencies>
 
