@@ -58,8 +58,4 @@ jobs:
             -Dformat=HTML || true
 
       # ---------------------------------------------------
-      # 7. SonarCloud static code analysis
-      - name: SonarCloud Scan
-        run: mvn -B sonar:sonar
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
