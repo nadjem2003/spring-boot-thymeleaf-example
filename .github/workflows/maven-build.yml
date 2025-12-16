@@ -81,7 +81,7 @@ jobs:
 
      # 9. SonarCloud static analysis (Maven-based – recommended)
       - name: SonarCloud Scan
-    run: mvn -B verify sonar:sonar
-    env:
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn -B verify sonar:sonar
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
